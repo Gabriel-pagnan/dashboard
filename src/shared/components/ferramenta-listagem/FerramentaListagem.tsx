@@ -1,7 +1,7 @@
 import { Button, Icon, TextField, Paper, useTheme, IconButton } from '@mui/material';
 import { Box } from '@mui/system';
 
-interface IBarraFeramentasProps {
+interface IFerramentaListagemProps {
     text?: string;
     showInputSearch?: boolean;
     changeTextSearch?: (newText: string) => void;
@@ -10,7 +10,7 @@ interface IBarraFeramentasProps {
     clickNewButton?: () => void;
 }
 
-export const BarraFeramentas: React.FC<IBarraFeramentasProps> = ({ 
+export const FerramentaListagem: React.FC<IFerramentaListagemProps> = ({ 
   text = '', 
   showInputSearch = false, 
   changeTextSearch, 
@@ -39,7 +39,7 @@ export const BarraFeramentas: React.FC<IBarraFeramentasProps> = ({
 
       <Box flex={1} display='flex' justifyContent='end'>
         {(showNewButton && 
-        <Button variant='contained' color='primary' disableElevation endIcon={
+        <Button variant='contained' color='primary' disableElevation startIcon={
           <Icon>add</Icon> } onClick={clickNewButton}>
           {textNewButton}
         </Button>)}
