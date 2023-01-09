@@ -1,5 +1,5 @@
 import { Box } from '@mui/system';
-import { Button, Divider, Icon, Paper, useTheme } from '@mui/material';
+import { Button, Divider, Icon, Paper, Skeleton, useTheme, Typography, useMediaQuery, Theme } from '@mui/material';
 
 interface IFerramentaDetalhe {
     textNewBotton?: string;
@@ -8,6 +8,13 @@ interface IFerramentaDetalhe {
     showDeleteButton?: boolean;
     showSaveButton?: boolean;
     showSaveBackButton?: boolean;
+
+    showNewButtonLoading?: boolean;
+    showBackButtonLoading?: boolean;
+    showDeleteButtonLoading?: boolean;
+    showSaveButtonLoading?: boolean;
+    showSaveBackButtonLoading?: boolean;
+    
     handleClickNew?: ()=> void; 
     handleClickBack?: ()=> void; 
     handleClickDelete?: ()=> void; 
@@ -23,6 +30,12 @@ export const FerramentaDetalhe: React.FC<IFerramentaDetalhe> = ({
   showSaveButton = true,
   showSaveBackButton = false,
 
+  showNewButtonLoading = false,
+  showBackButtonLoading = false,
+  showDeleteButtonLoading = false,
+  showSaveButtonLoading = false,
+  showSaveBackButtonLoading = false,
+
   handleClickNew, 
   handleClickBack, 
   handleClickDelete, 
@@ -30,46 +43,70 @@ export const FerramentaDetalhe: React.FC<IFerramentaDetalhe> = ({
   handleClickSaveBack,
 }) => {
   const theme = useTheme();
+  const smDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+  const mdDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
   return(
     <Box 
       component={Paper} 
       display='flex' 
       alignItems='center'
+      justifyContent={smDown? 'center' : 'flex-start'}
       height={theme.spacing(5)}
       marginX={1}
       padding={1}
       paddingX={2}
       gap={2}>
 
-      {(showSaveButton && <Button variant='contained' color='primary' disableElevation startIcon={
+      {(showSaveButton && !showSaveButtonLoading) && (<Button variant='contained' color='primary' disableElevation startIcon={
         <Icon>save</Icon> } onClick={handleClickSave}>
-        Salvar
+        <Typography overflow='hidden' textOverflow='ellipsis' variant='button' whiteSpace='nowrap'>
+          Salvar
+        </Typography>
       </Button>)} 
+      {showSaveButtonLoading && (<Skeleton width={109} height={69}/>)}
 
-      {(showSaveBackButton && <Button variant='contained' color='primary' disableElevation startIcon={
+      {(showSaveBackButton && !showSaveBackButtonLoading && !smDown && !mdDown) && (<Button variant='contained' color='primary' disableElevation startIcon={
         <Icon>save</Icon> } onClick={handleClickSaveBack}>
-        Salvar e voltar
+        <Typography overflow='hidden' textOverflow='ellipsis' variant='button' whiteSpace='nowrap'>
+          Salvar e Voltar
+        </Typography>
       </Button>)}
+      {(showSaveBackButtonLoading && !smDown) && (<Skeleton width={200} height={69}/>)}
 
       <Divider orientation="vertical" flexItem/>
 
-      {(showDeleteButton && <Button variant='contained' color='error' disableElevation startIcon={
+      {(showDeleteButton && !showDeleteButtonLoading)&& (<Button variant='contained' color='error' disableElevation startIcon={
         <Icon>delete</Icon> } onClick={handleClickDelete}>
-        Apagar
+        <Typography overflow='hidden' textOverflow='ellipsis' variant='button' whiteSpace='nowrap'>
+          Apagar
+        </Typography>
       </Button>)}   
+      {showDeleteButtonLoading && (<Skeleton width={109} height={69} />)}
 
-      {(showNewButton && <Button variant='contained' color='success' disableElevation startIcon={
+
+      {(showNewButton && !showNewButtonLoading && !smDown) && (<Button variant='contained' color='success' disableElevation startIcon={
         <Icon>add</Icon> } onClick={handleClickNew}>
-        {textNewBotton}
+        <Typography overflow='hidden' textOverflow='ellipsis' variant='button' whiteSpace='nowrap'>
+          {textNewBotton}
+        </Typography>
       </Button>)}
+      {showNewButtonLoading && (<Skeleton width={109} height={69}/>)}
 
-      <Divider orientation="vertical" flexItem/>
+      {
+        (
+          showBackButton &&
+          (showNewButton || showDeleteButton || showSaveButton || showSaveBackButton)
+        ) && (<Divider orientation="vertical" flexItem/>)
+      }
 
-      {(showBackButton && <Button variant='contained' color='warning' disableElevation startIcon={
+      {(showBackButton && !showBackButtonLoading) && (<Button variant='contained' color='warning' disableElevation startIcon={
         <Icon>reply</Icon> } onClick={handleClickBack}>
-        voltar
+        <Typography overflow='hidden' textOverflow='ellipsis' variant='button' whiteSpace='nowrap'>
+          Voltar
+        </Typography>
       </Button> )}  
+      {showBackButtonLoading && (<Skeleton width={109} height={69}/>)}
     </Box>
   );
 };
