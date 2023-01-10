@@ -1,5 +1,6 @@
 import { Button, Icon, TextField, Paper, useTheme, IconButton } from '@mui/material';
 import { Box } from '@mui/system';
+import { Environment } from '../../environment';
 
 interface IFerramentaListagemProps {
     text?: string;
@@ -31,7 +32,7 @@ export const FerramentaListagem: React.FC<IFerramentaListagemProps> = ({
       gap={1}>
 
       {(showInputSearch && <Box>
-        <TextField size='small' label='Pesquisar...' onChange={(e) => changeTextSearch?.(e.target.value)} value={text}/>
+        <TextField size='small' label={Environment.INPUT_BUSCA} onChange={(e) => changeTextSearch?.(e.target.value)} value={text}/>
         <IconButton type="button" aria-label="search">
           <Icon>search</Icon>
         </IconButton>
