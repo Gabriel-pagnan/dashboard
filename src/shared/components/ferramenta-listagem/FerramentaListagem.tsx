@@ -3,7 +3,7 @@ import { Box } from '@mui/system';
 import { Environment } from '../../environment';
 
 interface IFerramentaListagemProps {
-    text?: string;
+    textInput?: string;
     showInputSearch?: boolean;
     changeTextSearch?: (newText: string) => void;
     textNewButton?: string;
@@ -12,7 +12,7 @@ interface IFerramentaListagemProps {
 }
 
 export const FerramentaListagem: React.FC<IFerramentaListagemProps> = ({ 
-  text = '', 
+  textInput: text = '', 
   showInputSearch = false, 
   changeTextSearch, 
   textNewButton = 'Novo',
