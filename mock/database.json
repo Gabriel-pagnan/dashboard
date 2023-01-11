@@ -2,8 +2,15 @@
     "pessoas": [
         {
             "id": 1,
-            "nome": "teste",
-            "sobrenome": "askjda"
+            "email": "teste@teste.com",
+            "cityId": 10,
+            "fullName": "teste"
+        },
+        {
+            "id": 2,
+            "email": "teste@testea.com",
+            "cityId": 11,
+            "fullName": "jose"
         }
     ]
 }

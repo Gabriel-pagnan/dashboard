@@ -4,14 +4,14 @@ import { Api } from '../axios-config';
 interface IListingPeaple {
     id: number,
     email: string,
-    fullName: string,
     cityId: number,
+    fullName: string,
 }
 interface IDetailPeaple {
     id: number,
     email: string,
-    fullName: string,
     cityId: number,
+    fullName: string,
 }
 
 type TPeapleFullCount = {
@@ -19,7 +19,7 @@ type TPeapleFullCount = {
     fullCount: number
 } 
 
-const getAll = async (page = 1, filter: ''):Promise<TPeapleFullCount | Error> =>{
+const getAll = async (page = 1, filter: any):Promise<TPeapleFullCount | Error> =>{
   try {
     const urlRelative = `/pessoas?_page=${page}&_limit=${Environment.LIMITE_lINHAS}&fullName_like=${filter}`;
     const { data, headers } = await Api.get(urlRelative);
