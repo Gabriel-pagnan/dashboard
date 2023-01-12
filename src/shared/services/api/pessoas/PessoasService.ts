@@ -21,13 +21,13 @@ type TPeapleFullCount = {
 
 const getAll = async (page = 1, filter: any):Promise<TPeapleFullCount | Error> =>{
   try {
-    const urlRelative = `/pessoas?_page=${page}&_limit=${Environment.LIMITE_lINHAS}&fullName_like=${filter}`;
+    const urlRelative = `/pessoas?_page=${page}&_limit=${Environment.LIMITE_LINHAS}&fullName_like=${filter}`;
     const { data, headers } = await Api.get(urlRelative);
 
     if(data) {
       return {
         data,
-        fullCount: Number(headers['x-total-count'] || Environment.LIMITE_lINHAS),
+        fullCount: Number(headers['x-total-count'] || Environment.LIMITE_LINHAS),
       };
     }
     return new Error('Erro ao listar os registro');

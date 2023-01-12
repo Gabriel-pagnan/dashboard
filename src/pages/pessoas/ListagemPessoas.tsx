@@ -1,4 +1,4 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter, Paper, LinearProgress } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter, Paper, LinearProgress, Pagination } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { FerramentaListagem } from '../../shared/components';
@@ -17,6 +17,10 @@ export const LitagemPessoas: React.FC = () =>{
 
   const search = useMemo(()=>{
     return searchParams.get('search') || '';
+  }, [searchParams]);
+
+  const page = useMemo(()=>{
+    return Number(searchParams.get('page') || '1');
   }, [searchParams]);
 
   useEffect(()=>{
@@ -73,7 +77,7 @@ export const LitagemPessoas: React.FC = () =>{
             <caption>
               {Environment.LISTAGEM_VAZIA}
             </caption>
-          )}g
+          )}
 
           <TableFooter>
             {isLoading && (
@@ -83,6 +87,18 @@ export const LitagemPessoas: React.FC = () =>{
                 </TableCell>
               </TableRow>
             )}
+            {(fullCount > 0 && fullCount > Environment.LIMITE_LINHAS) && (
+              <TableRow>
+                <TableCell colSpan={3}>
+                  <Pagination 
+                    page={page}
+                    count={Math.ceil(fullCount / Environment.LIMITE_LINHAS)} 
+                    color='primary'
+                    onChange={(e, newPage) => setSearchParms({search, page: newPage.toString()}, {replace: true})}/>
+                </TableCell>
+              </TableRow>
+            )}
+
           </TableFooter>
         </Table>
       </TableContainer>
