@@ -26,7 +26,7 @@ export const LitagemPessoas: React.FC = () =>{
   useEffect(()=>{
     setIsLoading(true);
     debounce(() => {
-      PessoasService.getAll(1, search)
+      PessoasService.getAll(page, search)
         .then((result) => {
           setIsLoading(false);
 
@@ -42,7 +42,7 @@ export const LitagemPessoas: React.FC = () =>{
         });
     });
 
-  }, [search]);
+  }, [search, page]);
 
   return(
     <LayoutBase title="Listagem de pessoas" barraFerramentas={
@@ -50,13 +50,13 @@ export const LitagemPessoas: React.FC = () =>{
         textNewButton='Nova'
         showInputSearch
         textInput={search}
-        changeTextSearch={text => setSearchParms({search: text}, {replace: true})}
+        changeTextSearch={text => setSearchParms({search: text, page: '1'}, {replace: true})}
       />
     }>
 
       <TableContainer component={Paper} variant='outlined' sx={{m: 1, width: 'auto'}}>
-        <Table >
-          <TableHead >
+        <Table>
+          <TableHead>
             <TableRow>
               <TableCell>Ações</TableCell>
               <TableCell>Nome Completo</TableCell>
@@ -94,7 +94,7 @@ export const LitagemPessoas: React.FC = () =>{
                     page={page}
                     count={Math.ceil(fullCount / Environment.LIMITE_LINHAS)} 
                     color='primary'
-                    onChange={(e, newPage) => setSearchParms({search, page: newPage.toString()}, {replace: true})}/>
+                    onChange={(_, newPage) => setSearchParms({search, page: newPage.toString()}, {replace: true})}/>
                 </TableCell>
               </TableRow>
             )}
