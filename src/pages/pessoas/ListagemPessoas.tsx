@@ -1,7 +1,8 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter, Paper, LinearProgress } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { FerramentaListagem } from '../../shared/components';
+import { Environment } from '../../shared/environment';
 import { useDebounce } from '../../shared/hooks';
 import { LayoutBase } from '../../shared/layouts';
 import { PessoasService, IListingPeaple } from '../../shared/services/api/pessoas/PessoasService';
@@ -67,6 +68,22 @@ export const LitagemPessoas: React.FC = () =>{
               </TableRow>
             ))}
           </TableBody>
+
+          {fullCount === 0 && !isLoading &&(
+            <caption>
+              {Environment.LISTAGEM_VAZIA}
+            </caption>
+          )}g
+
+          <TableFooter>
+            {isLoading && (
+              <TableRow>
+                <TableCell colSpan={3}>
+                  <LinearProgress variant='indeterminate'/>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableFooter>
         </Table>
       </TableContainer>
     </LayoutBase>
