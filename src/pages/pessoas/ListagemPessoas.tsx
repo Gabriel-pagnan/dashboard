@@ -1,6 +1,6 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter, Paper, LinearProgress, Pagination } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter, Paper, LinearProgress, Pagination, IconButton, Icon } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { FerramentaListagem } from '../../shared/components';
 import { Environment } from '../../shared/environment';
 import { useDebounce } from '../../shared/hooks';
@@ -14,6 +14,8 @@ export const LitagemPessoas: React.FC = () =>{
   const [rows,setRows] = useState<IListingPeaple[]>([]);
   const [fullCount,setFullCount] = useState(0);
   const [isLoading,setIsLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   const search = useMemo(()=>{
     return searchParams.get('search') || '';
@@ -44,6 +46,22 @@ export const LitagemPessoas: React.FC = () =>{
 
   }, [search, page]);
 
+  const handleDelete = (id: number) => {
+    if(confirm('Deseja apagar este registro?')) {
+      PessoasService.deleteById(id)
+        .then(result => {
+          if(result instanceof Error){
+            alert(result.message);
+          }else{
+            setRows(oldRows => [
+              ...oldRows.filter(oldRow => oldRow.id !== id)
+            ]);
+            alert('Registro apagado');
+          }
+        });
+    }
+  };
+
   return(
     <LayoutBase title="Listagem de pessoas" barraFerramentas={
       <FerramentaListagem 
@@ -55,7 +73,7 @@ export const LitagemPessoas: React.FC = () =>{
     }>
 
       <TableContainer component={Paper} variant='outlined' sx={{m: 1, width: 'auto'}}>
-        <Table>
+        <Table size='small'>
           <TableHead>
             <TableRow>
               <TableCell>Ações</TableCell>
@@ -66,7 +84,14 @@ export const LitagemPessoas: React.FC = () =>{
           <TableBody>
             {rows.map(row =>(
               <TableRow key={row.id}>
-                <TableCell>Ações</TableCell>
+                <TableCell>
+                  <IconButton size='small' color='error' onClick={() => handleDelete(row.id)}>
+                    <Icon>delete</Icon>
+                  </IconButton>
+                  <IconButton size='small' color='primary' onClick={() => navigate(`/pessoas/detalhe/${row.id}`)}>
+                    <Icon>edit</Icon>
+                  </IconButton>
+                </TableCell>
                 <TableCell>{row.fullName}</TableCell>
                 <TableCell>{row.email}</TableCell>
               </TableRow>

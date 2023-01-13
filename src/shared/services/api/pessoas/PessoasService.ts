@@ -69,7 +69,6 @@ const create = async (dados: Omit<IDetailPeaple, 'id'>):Promise<number | Error> 
 const updateById = async (id: number, dados: IDetailPeaple):Promise<void | Error> =>{
   try {
     await Api.put(`/pessoas/${id}`, dados);
-    return new Error('Erro ao atualizar o registro');
   } catch (error) {
     console.log(error);
     return new Error((error as {message: string}).message || 'Erro ao atualizar o registro');
@@ -79,7 +78,6 @@ const updateById = async (id: number, dados: IDetailPeaple):Promise<void | Error
 const deleteById = async (id: number):Promise<void | Error> =>{
   try {
     await Api.delete(`/pessoas/${id}`);
-    return new Error('Erro ao deletar o registro');
   } catch (error) {
     console.log(error);
     return new Error((error as {message: string}).message || 'Erro ao deletar o registro');
