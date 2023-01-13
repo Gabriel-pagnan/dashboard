@@ -74,7 +74,12 @@ export const FerramentaDetalhe: React.FC<IFerramentaDetalhe> = ({
       </Button>)}
       {(showSaveBackButtonLoading && !smDown) && (<Skeleton width={200} height={69}/>)}
 
-      <Divider orientation="vertical" flexItem/>
+      {
+        (
+          showBackButton &&
+          (showNewButton || showDeleteButton || showSaveButton || showSaveBackButton)
+        ) && (<Divider orientation="vertical" flexItem/>)
+      }
 
       {(showDeleteButton && !showDeleteButtonLoading)&& (<Button variant='contained' color='error' disableElevation startIcon={
         <Icon>delete</Icon> } onClick={handleClickDelete}>
@@ -86,19 +91,12 @@ export const FerramentaDetalhe: React.FC<IFerramentaDetalhe> = ({
 
 
       {(showNewButton && !showNewButtonLoading && !smDown) && (<Button variant='contained' color='success' disableElevation startIcon={
-        <Icon>add</Icon> } onClick={handleClickNew}>
+        <Icon>person_add</Icon> } onClick={handleClickNew}>
         <Typography overflow='hidden' textOverflow='ellipsis' variant='button' whiteSpace='nowrap'>
           {textNewBotton}
         </Typography>
       </Button>)}
       {showNewButtonLoading && (<Skeleton width={109} height={69}/>)}
-
-      {
-        (
-          showBackButton &&
-          (showNewButton || showDeleteButton || showSaveButton || showSaveBackButton)
-        ) && (<Divider orientation="vertical" flexItem/>)
-      }
 
       {(showBackButton && !showBackButtonLoading) && (<Button variant='contained' color='warning' disableElevation startIcon={
         <Icon>reply</Icon> } onClick={handleClickBack}>

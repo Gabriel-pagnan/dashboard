@@ -1,4 +1,3 @@
-import React from 'react';
 import { DrawerProvider, AppThemeProvider } from './shared/contexts';
 import { BrowserRouter } from 'react-router-dom';
 import { AppRoutes } from './routes';

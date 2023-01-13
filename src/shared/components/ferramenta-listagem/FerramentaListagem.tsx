@@ -41,7 +41,7 @@ export const FerramentaListagem: React.FC<IFerramentaListagemProps> = ({
       <Box flex={1} display='flex' justifyContent='end'>
         {(showNewButton && 
         <Button variant='contained' color='primary' disableElevation startIcon={
-          <Icon>add</Icon> } onClick={clickNewButton}>
+          <Icon>person_add</Icon> } onClick={clickNewButton}>
           {textNewButton}
         </Button>)}
       </Box>

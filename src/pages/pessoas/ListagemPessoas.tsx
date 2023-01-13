@@ -1,6 +1,7 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter, Paper, LinearProgress, Pagination, IconButton, Icon } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { FerramentaListagem } from '../../shared/components';
 import { Environment } from '../../shared/environment';
 import { useDebounce } from '../../shared/hooks';
@@ -14,7 +15,7 @@ export const LitagemPessoas: React.FC = () =>{
   const [rows,setRows] = useState<IListingPeaple[]>([]);
   const [fullCount,setFullCount] = useState(0);
   const [isLoading,setIsLoading] = useState(true);
-
+  
   const navigate = useNavigate();
 
   const search = useMemo(()=>{
@@ -35,9 +36,7 @@ export const LitagemPessoas: React.FC = () =>{
           if(result instanceof Error) {
             alert(result.message);
             return;
-          }else{
-            console.log(result);
-            
+          }else{          
             setRows(result.data);
             setFullCount(result.fullCount);
           }
@@ -51,12 +50,12 @@ export const LitagemPessoas: React.FC = () =>{
       PessoasService.deleteById(id)
         .then(result => {
           if(result instanceof Error){
-            alert(result.message);
+            toast.error(result.message);
           }else{
+            toast.success('Registro apagado');
             setRows(oldRows => [
               ...oldRows.filter(oldRow => oldRow.id !== id)
             ]);
-            alert('Registro apagado');
           }
         });
     }
@@ -65,14 +64,14 @@ export const LitagemPessoas: React.FC = () =>{
   return(
     <LayoutBase title="Listagem de pessoas" barraFerramentas={
       <FerramentaListagem 
-        textNewButton='Nova'
+        textNewButton='Novo'
+        clickNewButton={() => navigate('/pessoas/detalhe/novo')}
         showInputSearch
         textInput={search}
         changeTextSearch={text => setSearchParms({search: text, page: '1'}, {replace: true})}
       />
     }>
-
-      <TableContainer component={Paper} variant='outlined' sx={{m: 1, width: 'auto'}}>
+      <TableContainer component={Paper} variant='outlined' sx={{m: 2, width: 'auto'}}>
         <Table size='small'>
           <TableHead>
             <TableRow>
