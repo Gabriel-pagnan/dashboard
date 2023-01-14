@@ -2,9 +2,9 @@
   "pessoas": [
     {
       "id": 1,
-      "email": "teste@teste.com",
-      "cityId": 10,
-      "fullName": "gabriel"
+      "fullName": "Gabriel Vinicius",
+      "email": "teste@gmail.com",
+      "cityId": "1"
     },
     {
       "id": 2,
@@ -17,6 +17,18 @@
       "email": "teste@teste.com",
       "cityId": 10,
       "fullName": "gabriel"
+    },
+    {
+      "fullName": "Maria",
+      "email": "maria@teste.com",
+      "cityId": "2",
+      "id": 6
+    },
+    {
+      "fullName": "Jose",
+      "email": "jose@gmail.com",
+      "cityId": "2",
+      "id": 7
     }
   ]
 }
