@@ -8,9 +8,9 @@
     },
     {
       "id": 2,
+      "fullName": "gabrielpagnan",
       "email": "teste@teste.com",
-      "cityId": 10,
-      "fullName": "gabriel"
+      "cityId": 10
     },
     {
       "id": 5,
@@ -19,16 +19,34 @@
       "fullName": "gabriel"
     },
     {
-      "fullName": "Maria",
+      "id": 6,
+      "fullName": "Maria 2",
       "email": "maria@teste.com",
-      "cityId": "2",
-      "id": 6
+      "cityId": "2"
     },
     {
-      "fullName": "Jose",
+      "id": 7,
+      "fullName": "Jose silva",
       "email": "jose@gmail.com",
-      "cityId": "2",
-      "id": 7
+      "cityId": "2"
+    },
+    {
+      "id": 8,
+      "fullName": "Jose Maria Silva",
+      "email": "maria@gmail.com",
+      "cityId": "2"
+    },
+    {
+      "id": 9,
+      "fullName": "pedro a",
+      "email": "asda@dasas",
+      "cityId": "1"
+    },
+    {
+      "fullName": "Jose Maria 2",
+      "email": "maria@gmail.com2",
+      "cityId": "3",
+      "id": 10
     }
   ]
 }

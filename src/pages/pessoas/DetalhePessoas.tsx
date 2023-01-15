@@ -1,12 +1,11 @@
-import { Form } from '@unform/web';
-import { FormHandles } from '@unform/core';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FerramentaDetalhe } from '../../shared/components';
-import { VTextField } from '../../shared/forms';
+import { VTextField, VForm, useVForm } from '../../shared/forms';
 import { LayoutBase } from '../../shared/layouts';
 import { PessoasService } from '../../shared/services/api/pessoas/PessoasService';
+import { Box, Button, CircularProgress, Grid, Icon, Paper, Typography } from '@mui/material';
 
 interface IFormData {
   email: string;
@@ -20,7 +19,15 @@ export const DetalhePessoas: React.FC = () =>{
   const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState('');
 
-  const formRef = useRef<FormHandles>(null);
+  const {formRef, save, saveAndClose, isSaveAndClose} = useVForm();
+
+  const clear = () => {
+    formRef.current?.setData({
+      fullName: '',
+      email: '',
+      cityId: '',
+    });
+  };
 
   useEffect(() => {
     if(id !== 'novo') {
@@ -38,8 +45,10 @@ export const DetalhePessoas: React.FC = () =>{
             formRef.current?.setData(result);
           }
         });
+    }else {
+      clear();
     }
-  }, []);
+  }, [id]);
 
   const handleSave = (dados: IFormData) =>{
     setIsLoading(true);
@@ -52,6 +61,11 @@ export const DetalhePessoas: React.FC = () =>{
             toast.error(result.message);
           }else{
             toast.success('Cadastro salvo.');
+            if (isSaveAndClose()) {
+              navigate('/pessoas');
+            }else{
+              navigate(`/pessoas/detalhe/${result}`);
+            }
           }
         });
     }else {
@@ -62,6 +76,9 @@ export const DetalhePessoas: React.FC = () =>{
             toast.error(result.message);
           }else{
             toast.success('Atualizado com sucesso.');
+            if (isSaveAndClose()) {
+              navigate('/pessoas');
+            }
           }
         });
     }
@@ -95,16 +112,52 @@ export const DetalhePessoas: React.FC = () =>{
           handleClickBack={() => navigate(id !== 'novo' ? '/pessoas' : '/home')}
           handleClickNew={() => navigate('/pessoas/detalhe/novo')}
           handleClickDelete={() => handleDelete(Number(id))}
-          handleClickSave={() => formRef.current?.submitForm()}
-          handleClickSaveBack={() => formRef.current?.submitForm()}
+          handleClickSave={save}
+          handleClickSaveBack={saveAndClose}
         />
       }>
       
-      <Form ref={formRef} onSubmit={handleSave}>
-        <VTextField placeholder='Nome Completo' name='fullName' />
-        <VTextField placeholder='E-mail' name='email' />
-        <VTextField placeholder='ID da cidade' name='cityId' />
-      </Form>
+      <VForm ref={formRef} onSubmit={handleSave}>
+        <Box margin={2} display='flex' flexDirection='column' component={Paper}>
+          <Grid container direction='column' padding={2} spacing={2}>
+
+            {isLoading &&(
+              <Grid item display='flex' justifyContent='center'>
+                <CircularProgress variant='indeterminate'/>
+              </Grid>
+            )}
+            <Grid item>
+              <Typography variant='h6'>Geral</Typography>
+            </Grid>
+
+            <Grid container item direction='row' spacing={2}>
+              <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
+                <VTextField label='Nome Completo' name='fullName' fullWidth disabled={isLoading} onChange={e => setName(e.target.value)}/>
+              </Grid>
+            </Grid>
+
+            <Grid container item direction='row' spacing={2}>
+              <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>             
+                <VTextField label='E-mail' name='email' fullWidth disabled={isLoading}/>
+              </Grid>
+            </Grid>
+
+            <Grid container item direction='row' spacing={2}>
+              <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
+                <VTextField label='Cidade' name='cityId' fullWidth disabled={isLoading}/>
+              </Grid>
+            </Grid>
+
+            <Grid container item direction='row' spacing={2}>
+              <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
+                <Button fullWidth variant='contained' disabled={isLoading} color='primary' startIcon={<Icon>clear_all</Icon>} onClick={clear}> 
+                  Limpar
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Box>
+      </VForm>
     </LayoutBase>
   );
 };
