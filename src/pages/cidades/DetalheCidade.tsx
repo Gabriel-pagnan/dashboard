@@ -2,25 +2,24 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FerramentaDetalhe } from '../../shared/components';
-import { VTextField, VForm, useVForm } from '../../shared/forms';
+import { VTextField, VForm, useVForm, currencies } from '../../shared/forms';
 import { LayoutBase } from '../../shared/layouts';
-import { PessoasService } from '../../shared/services/api/pessoas/PessoasService';
-import { Box, Button, CircularProgress, Grid, Icon, Paper, Typography } from '@mui/material';
+import { CidadesService } from '../../shared/services/api/cidades/CidadesService';
+import { Box, Button, CircularProgress, Grid, Icon, MenuItem, Paper, Typography } from '@mui/material';
 import * as yup from 'yup';
 
 interface IFormData {
-  email: string;
-  cityId: number;
-  fullName: string;
+  name: string;
+  uf: string
 }
 
 const formValidationSchema: yup.SchemaOf<IFormData> = yup.object().shape({
-  cityId: yup.number().required(),
-  email: yup.string().required('E-mail inválido.').email(),
-  fullName: yup.string().required().min(4),
+  name: yup.string().required().min(4),
+  uf: yup.string().required().min(2),
 });
 
-export const DetalhePessoas: React.FC = () => {
+
+export const DetalheCidades: React.FC = () => {
   const { id = 'novo' } = useParams<'id'>();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -30,9 +29,7 @@ export const DetalhePessoas: React.FC = () => {
 
   const clear = () => {
     formRef.current?.setData({
-      fullName: '',
-      email: '',
-      cityId: '',
+      name: '',
     });
   };
 
@@ -40,15 +37,15 @@ export const DetalhePessoas: React.FC = () => {
     if (id !== 'novo') {
       setIsLoading(true);
 
-      PessoasService.getById(Number(id))
+      CidadesService.getById(Number(id))
         .then((result) => {
           setIsLoading(false);
 
           if (result instanceof Error) {
             toast.error(result.message);
-            navigate('/pessoas');
+            navigate('/cidades');
           } else {
-            setName(result.fullName);
+            setName(result.name);
             formRef.current?.setData(result);
           }
         });
@@ -64,7 +61,7 @@ export const DetalhePessoas: React.FC = () => {
         setIsLoading(true);
 
         if (id === 'novo') {
-          PessoasService.create(dadosValid)
+          CidadesService.create(dadosValid)
             .then((result) => {
               setIsLoading(false);
               if (result instanceof Error) {
@@ -72,14 +69,14 @@ export const DetalhePessoas: React.FC = () => {
               } else {
                 toast.success('Cadastro salvo.');
                 if (isSaveAndClose()) {
-                  navigate('/pessoas');
+                  navigate('/cidades');
                 } else {
-                  navigate(`/pessoas/detalhe/${result}`);
+                  navigate(`/cidades/detalhe/${result}`);
                 }
               }
             });
         } else {
-          PessoasService.updateById(Number(id), { id: Number(id), ...dadosValid })
+          CidadesService.updateById(Number(id), { id: Number(id), ...dadosValid })
             .then((result) => {
               setIsLoading(false);
               if (result instanceof Error) {
@@ -87,7 +84,7 @@ export const DetalhePessoas: React.FC = () => {
               } else {
                 toast.success('Atualizado com sucesso.');
                 if (isSaveAndClose()) {
-                  navigate('/pessoas');
+                  navigate('/cidades');
                 }
               }
             });
@@ -106,13 +103,13 @@ export const DetalhePessoas: React.FC = () => {
 
   const handleDelete = (id: number) => {
     if (confirm('Deseja apagar este registro?')) {
-      PessoasService.deleteById(id)
+      CidadesService.deleteById(id)
         .then(result => {
           if (result instanceof Error) {
             toast.error(result.message);
           } else {
             toast.success('Registro deletado.');
-            navigate('/pessoas');
+            navigate('/cidades');
           }
         });
     }
@@ -129,8 +126,8 @@ export const DetalhePessoas: React.FC = () => {
           showSaveBackButton
           showSaveButton
 
-          handleClickBack={() => navigate(id !== 'novo' ? '/pessoas' : '/home')}
-          handleClickNew={() => navigate('/pessoas/detalhe/novo')}
+          handleClickBack={() => navigate(id !== 'novo' ? '/cidades' : '/home')}
+          handleClickNew={() => navigate('/cidades/detalhe/novo')}
           handleClickDelete={() => handleDelete(Number(id))}
           handleClickSave={save}
           handleClickSaveBack={saveAndClose}
@@ -149,25 +146,24 @@ export const DetalhePessoas: React.FC = () => {
             <Grid item>
               <Typography variant='h6' display='flex' alignItems='center' gap={2} marginBottom={2}>
                 <Icon>fact_check</Icon>
-                Dados pessoais
+                Dados
               </Typography>
             </Grid>
 
             <Grid container item direction='row' spacing={2}>
               <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
-                <VTextField  variant='filled' label='Nome Completo' name='fullName' fullWidth disabled={isLoading} onChange={e => setName(e.target.value)} />
+                <VTextField variant='filled' label='Nome' name='name' fullWidth disabled={isLoading} onChange={e => setName(e.target.value)} />
               </Grid>
             </Grid>
-
             <Grid container item direction='row' spacing={2}>
               <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
-                <VTextField variant='filled' label='E-mail' name='email' fullWidth disabled={isLoading} />
-              </Grid>
-            </Grid>
-
-            <Grid container item direction='row' spacing={2}>
-              <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
-                <VTextField variant='filled' label='Cidade' name='cityId' fullWidth disabled={isLoading} />
+                <VTextField variant='filled' label='UF' name='uf' fullWidth disabled={isLoading} select>
+                  {currencies.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </VTextField>
               </Grid>
             </Grid>
 

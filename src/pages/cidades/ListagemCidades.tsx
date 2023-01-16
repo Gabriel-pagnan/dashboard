@@ -6,13 +6,13 @@ import { FerramentaListagem } from '../../shared/components';
 import { Environment } from '../../shared/environment';
 import { useDebounce } from '../../shared/hooks';
 import { LayoutBase } from '../../shared/layouts';
-import { PessoasService, IListingPeaple } from '../../shared/services/api/pessoas/PessoasService';
+import { CidadesService, IListingCity } from '../../shared/services/api/cidades/CidadesService';
 
-export const LitagemPessoas: React.FC = () =>{
+export const LitagemCidades: React.FC = () =>{
   const [searchParams, setSearchParms] = useSearchParams();
   const {debounce} = useDebounce(3000);
 
-  const [rows,setRows] = useState<IListingPeaple[]>([]);
+  const [rows,setRows] = useState<IListingCity[]>([]);
   const [fullCount,setFullCount] = useState(0);
   const [isLoading,setIsLoading] = useState(true);
   
@@ -29,7 +29,7 @@ export const LitagemPessoas: React.FC = () =>{
   useEffect(()=>{
     setIsLoading(true);
     debounce(() => {
-      PessoasService.getAll(page, search)
+      CidadesService.getAll(page, search)
         .then((result) => {
           setIsLoading(false);
 
@@ -47,7 +47,7 @@ export const LitagemPessoas: React.FC = () =>{
 
   const handleDelete = (id: number) => {
     if(confirm('Deseja apagar este registro?')) {
-      PessoasService.deleteById(id)
+      CidadesService.deleteById(id)
         .then(result => {
           if(result instanceof Error){
             toast.error(result.message);
@@ -62,10 +62,10 @@ export const LitagemPessoas: React.FC = () =>{
   };
 
   return(
-    <LayoutBase title="Listagem de pessoas" barraFerramentas={
+    <LayoutBase title="Listagem de cidades" barraFerramentas={
       <FerramentaListagem 
         textNewButton='Novo'
-        clickNewButton={() => navigate('/pessoas/detalhe/novo')}
+        clickNewButton={() => navigate('/cidades/detalhe/novo')}
         showInputSearch
         textInput={search}
         changeTextSearch={text => setSearchParms({search: text, page: '1'}, {replace: true})}
@@ -76,8 +76,8 @@ export const LitagemPessoas: React.FC = () =>{
           <TableHead>
             <TableRow>
               <TableCell>Ações</TableCell>
-              <TableCell>Nome Completo</TableCell>
-              <TableCell>E-mail</TableCell>
+              <TableCell>Nome</TableCell>
+              <TableCell>UF</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -87,12 +87,12 @@ export const LitagemPessoas: React.FC = () =>{
                   <IconButton size='small' color='error' onClick={() => handleDelete(row.id)}>
                     <Icon>delete</Icon>
                   </IconButton>
-                  <IconButton size='small' color='primary' onClick={() => navigate(`/pessoas/detalhe/${row.id}`)}>
+                  <IconButton size='small' color='primary' onClick={() => navigate(`/cidades/detalhe/${row.id}`)}>
                     <Icon>edit</Icon>
                   </IconButton>
                 </TableCell>
-                <TableCell>{row.fullName}</TableCell>
-                <TableCell>{row.email}</TableCell>
+                <TableCell width={250}>{row.name}</TableCell>
+                <TableCell>{row.uf}</TableCell>
               </TableRow>
             ))}
           </TableBody>

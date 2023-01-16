@@ -48,5 +48,21 @@
       "cityId": "3",
       "id": 10
     }
+  ],
+  "cidades": [
+    {
+      "name": "Franca",
+      "id": 1
+    },
+    {
+      "id": 2,
+      "name": "Franca",
+      "uf": "SP"
+    },
+    {
+      "name": "Ribeirão Preto",
+      "uf": "SP",
+      "id": 3
+    }
   ]
 }
