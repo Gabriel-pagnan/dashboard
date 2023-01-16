@@ -6,6 +6,7 @@ import { VTextField, VForm, useVForm } from '../../shared/forms';
 import { LayoutBase } from '../../shared/layouts';
 import { PessoasService } from '../../shared/services/api/pessoas/PessoasService';
 import { Box, Button, CircularProgress, Grid, Icon, Paper, Typography } from '@mui/material';
+import * as yup from 'yup';
 
 interface IFormData {
   email: string;
@@ -13,13 +14,19 @@ interface IFormData {
   fullName: string;
 }
 
-export const DetalhePessoas: React.FC = () =>{
-  const {id = 'novo'} = useParams<'id'>();
+const formValidationSchema: yup.SchemaOf<IFormData> = yup.object().shape({
+  cityId: yup.number().required(),
+  email: yup.string().required('E-mail inválido.').email(),
+  fullName: yup.string().required().min(4),
+});
+
+export const DetalhePessoas: React.FC = () => {
+  const { id = 'novo' } = useParams<'id'>();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState('');
 
-  const {formRef, save, saveAndClose, isSaveAndClose} = useVForm();
+  const { formRef, save, saveAndClose, isSaveAndClose } = useVForm();
 
   const clear = () => {
     formRef.current?.setData({
@@ -30,67 +37,80 @@ export const DetalhePessoas: React.FC = () =>{
   };
 
   useEffect(() => {
-    if(id !== 'novo') {
+    if (id !== 'novo') {
       setIsLoading(true);
 
       PessoasService.getById(Number(id))
         .then((result) => {
           setIsLoading(false);
 
-          if(result instanceof Error) {
+          if (result instanceof Error) {
             toast.error(result.message);
             navigate('/pessoas');
-          }else{
+          } else {
             setName(result.fullName);
             formRef.current?.setData(result);
           }
         });
-    }else {
+    } else {
       clear();
     }
   }, [id]);
 
-  const handleSave = (dados: IFormData) =>{
-    setIsLoading(true);
+  const handleSave = (dados: IFormData) => {
+    formValidationSchema
+      .validate(dados, { abortEarly: false })
+      .then((dadosValid) => {
+        setIsLoading(true);
 
-    if(id === 'novo') {
-      PessoasService.create(dados)
-        .then((result) => {
-          setIsLoading(false);
-          if(result instanceof Error) {
-            toast.error(result.message);
-          }else{
-            toast.success('Cadastro salvo.');
-            if (isSaveAndClose()) {
-              navigate('/pessoas');
-            }else{
-              navigate(`/pessoas/detalhe/${result}`);
-            }
-          }
+        if (id === 'novo') {
+          PessoasService.create(dadosValid)
+            .then((result) => {
+              setIsLoading(false);
+              if (result instanceof Error) {
+                toast.error(result.message);
+              } else {
+                toast.success('Cadastro salvo.');
+                if (isSaveAndClose()) {
+                  navigate('/pessoas');
+                } else {
+                  navigate(`/pessoas/detalhe/${result}`);
+                }
+              }
+            });
+        } else {
+          PessoasService.updateById(Number(id), { id: Number(id), ...dadosValid })
+            .then((result) => {
+              setIsLoading(false);
+              if (result instanceof Error) {
+                toast.error(result.message);
+              } else {
+                toast.success('Atualizado com sucesso.');
+                if (isSaveAndClose()) {
+                  navigate('/pessoas');
+                }
+              }
+            });
+        }
+      })
+      .catch((errors: yup.ValidationError) => {
+        const validateErrors: {[key: string]: string} = {};
+        errors.inner.forEach(error => {
+          if(!error.path) return;
+          validateErrors[error.path] = error.message;
         });
-    }else {
-      PessoasService.updateById(Number(id), {id: Number(id), ...dados})
-        .then((result) => {
-          setIsLoading(false);
-          if(result instanceof Error) {
-            toast.error(result.message);
-          }else{
-            toast.success('Atualizado com sucesso.');
-            if (isSaveAndClose()) {
-              navigate('/pessoas');
-            }
-          }
-        });
-    }
+
+        formRef.current?.setErrors(validateErrors);
+      });
   };
 
   const handleDelete = (id: number) => {
-    if(confirm('Deseja apagar este registro?')) {
+    if (confirm('Deseja apagar este registro?')) {
       PessoasService.deleteById(id)
         .then(result => {
-          if(result instanceof Error){
+          if (result instanceof Error) {
             toast.error(result.message);
-          }else{
+          } else {
             toast.success('Registro deletado.');
             navigate('/pessoas');
           }
@@ -98,17 +118,17 @@ export const DetalhePessoas: React.FC = () =>{
     }
   };
 
-  return(
-    <LayoutBase 
-      title={(id !== 'novo') ? `${name}` : 'Cadastrar' }
+  return (
+    <LayoutBase
+      title={(id !== 'novo') ? `${name}` : 'Cadastrar'}
       barraFerramentas={
-        <FerramentaDetalhe 
+        <FerramentaDetalhe
           showNewButton={id !== 'novo'}
           showDeleteButton={id !== 'novo'}
           showBackButton
           showSaveBackButton
           showSaveButton
-          
+
           handleClickBack={() => navigate(id !== 'novo' ? '/pessoas' : '/home')}
           handleClickNew={() => navigate('/pessoas/detalhe/novo')}
           handleClickDelete={() => handleDelete(Number(id))}
@@ -116,41 +136,44 @@ export const DetalhePessoas: React.FC = () =>{
           handleClickSaveBack={saveAndClose}
         />
       }>
-      
+
       <VForm ref={formRef} onSubmit={handleSave}>
         <Box margin={2} display='flex' flexDirection='column' component={Paper}>
           <Grid container direction='column' padding={2} spacing={2}>
 
-            {isLoading &&(
+            {isLoading && (
               <Grid item display='flex' justifyContent='center'>
-                <CircularProgress variant='indeterminate'/>
+                <CircularProgress variant='indeterminate' />
               </Grid>
             )}
             <Grid item>
-              <Typography variant='h6'>Geral</Typography>
+              <Typography variant='h6' display='flex' alignItems='center' gap={2} marginBottom={2}>
+                <Icon>fact_check</Icon>
+                Dados pessoais
+              </Typography>
             </Grid>
 
             <Grid container item direction='row' spacing={2}>
               <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
-                <VTextField label='Nome Completo' name='fullName' fullWidth disabled={isLoading} onChange={e => setName(e.target.value)}/>
-              </Grid>
-            </Grid>
-
-            <Grid container item direction='row' spacing={2}>
-              <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>             
-                <VTextField label='E-mail' name='email' fullWidth disabled={isLoading}/>
-              </Grid>
-            </Grid>
-
-            <Grid container item direction='row' spacing={2}>
-              <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
-                <VTextField label='Cidade' name='cityId' fullWidth disabled={isLoading}/>
+                <VTextField label='Nome Completo' name='fullName' fullWidth disabled={isLoading} onChange={e => setName(e.target.value)} />
               </Grid>
             </Grid>
 
             <Grid container item direction='row' spacing={2}>
               <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
-                <Button fullWidth variant='contained' disabled={isLoading} color='primary' startIcon={<Icon>clear_all</Icon>} onClick={clear}> 
+                <VTextField label='E-mail' name='email' fullWidth disabled={isLoading} />
+              </Grid>
+            </Grid>
+
+            <Grid container item direction='row' spacing={2}>
+              <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
+                <VTextField label='Cidade' name='cityId' fullWidth disabled={isLoading} />
+              </Grid>
+            </Grid>
+
+            <Grid container item direction='row' spacing={2}>
+              <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
+                <Button fullWidth variant='contained' disabled={isLoading} color='primary' startIcon={<Icon>clear_all</Icon>} onClick={clear}>
                   Limpar
                 </Button>
               </Grid>
