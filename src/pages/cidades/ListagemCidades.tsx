@@ -34,7 +34,7 @@ export const LitagemCidades: React.FC = () =>{
           setIsLoading(false);
 
           if(result instanceof Error) {
-            alert(result.message);
+            toast.error(result.message);
             return;
           }else{          
             setRows(result.data);

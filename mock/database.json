@@ -4,7 +4,7 @@
       "id": 1,
       "fullName": "Gabriel Vinicius",
       "email": "teste@gmail.com",
-      "cityId": "1"
+      "cityId": 1
     },
     {
       "id": 2,
@@ -14,9 +14,9 @@
     },
     {
       "id": 5,
+      "fullName": "gabriel",
       "email": "teste@teste.com",
-      "cityId": 10,
-      "fullName": "gabriel"
+      "cityId": 5
     },
     {
       "id": 6,
@@ -47,6 +47,12 @@
       "email": "maria@gmail.com2",
       "cityId": "3",
       "id": 10
+    },
+    {
+      "fullName": "Maria teste",
+      "email": "maria@gmail.com",
+      "cityId": 1,
+      "id": 11
     }
   ],
   "cidades": [
@@ -63,6 +69,26 @@
       "name": "Ribeirão Preto",
       "uf": "SP",
       "id": 3
+    },
+    {
+      "name": "Campinas",
+      "uf": "SP",
+      "id": 4
+    },
+    {
+      "name": "Santos",
+      "uf": "SP",
+      "id": 5
+    },
+    {
+      "name": "Uberlandia",
+      "uf": "MG",
+      "id": 6
+    },
+    {
+      "name": "Gravatai",
+      "uf": "GO",
+      "id": 7
     }
   ]
 }

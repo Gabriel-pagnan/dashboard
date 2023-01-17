@@ -7,6 +7,7 @@ import { LayoutBase } from '../../shared/layouts';
 import { PessoasService } from '../../shared/services/api/pessoas/PessoasService';
 import { Box, Button, CircularProgress, Grid, Icon, Paper, Typography } from '@mui/material';
 import * as yup from 'yup';
+import { AutoCompleteCidade } from './components/Auto-complete';
 
 interface IFormData {
   email: string;
@@ -32,7 +33,7 @@ export const DetalhePessoas: React.FC = () => {
     formRef.current?.setData({
       fullName: '',
       email: '',
-      cityId: '',
+      cityId: undefined,
     });
   };
 
@@ -167,7 +168,7 @@ export const DetalhePessoas: React.FC = () => {
 
             <Grid container item direction='row' spacing={2}>
               <Grid item xs={12} sm={12} md={8} lg={4} xl={2}>
-                <VTextField variant='filled' label='Cidade' name='cityId' fullWidth disabled={isLoading} />
+                <AutoCompleteCidade isExternalLoading={isLoading} />
               </Grid>
             </Grid>
 
