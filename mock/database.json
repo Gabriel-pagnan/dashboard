@@ -57,8 +57,9 @@
   ],
   "cidades": [
     {
+      "id": 1,
       "name": "Franca",
-      "id": 1
+      "uf": "SP"
     },
     {
       "id": 2,

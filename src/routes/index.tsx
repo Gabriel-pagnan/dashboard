@@ -8,8 +8,8 @@ export const AppRoutes = () =>{
   useEffect(()=> {
     setDrawerOption([
       {
-        label: 'Home',
-        icon: 'home',
+        label: 'Dashboard',
+        icon: 'dashboard',
         path: '/home'
       },
       {
