@@ -1,20 +1,26 @@
 import './shared/forms/TradutorYup';
-import { DrawerProvider, AppThemeProvider } from './shared/contexts';
+import { DrawerProvider, AppThemeProvider, AuthProvider } from './shared/contexts';
 import { BrowserRouter } from 'react-router-dom';
 import { AppRoutes } from './routes';
-import { SideBar } from './shared/components';
+import { Login, SideBar } from './shared/components';
 
 export const App = () => {
   return (
-    <AppThemeProvider>
-      <DrawerProvider>
-        <BrowserRouter>
-          <SideBar>
-            <AppRoutes />
-          </SideBar>
-        </BrowserRouter>
-      </DrawerProvider>
-    </AppThemeProvider>
+    <AuthProvider>
+      <AppThemeProvider>
+        <Login>
+
+          <DrawerProvider>
+            <BrowserRouter>
+              <SideBar>
+                <AppRoutes />
+              </SideBar>
+            </BrowserRouter>
+          </DrawerProvider>
+          
+        </Login>
+      </AppThemeProvider>
+    </AuthProvider>
   );
 };
 
