@@ -82,9 +82,9 @@
       "id": 5
     },
     {
-      "name": "Uberlandia",
-      "uf": "MG",
-      "id": 6
+      "id": 6,
+      "name": "Ortolandia",
+      "uf": "MG"
     },
     {
       "name": "Gravatai",
@@ -94,5 +94,13 @@
   ],
   "auth": {
     "accessToken": "jkhadkhjakjshdkjhasduueunzkjnnvdon128971347sdknmaosjfn"
-  }
+  },
+  "user": [
+    {
+      "name": "asdfa",
+      "email": "gAS@gmail.com",
+      "senha": "123456",
+      "id": "2Hr4oDT"
+    }
+  ]
 }
